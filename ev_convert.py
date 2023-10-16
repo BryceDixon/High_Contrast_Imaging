@@ -1,11 +1,25 @@
 """
 Code to convert stellar evolutionary models to contrast curves
+
+Contains:
+    contrast_convert class
+        ev_plot function
+        ev_convert function
+        mag_to_mass function
+    convert function
+    contrast_to_mag function
+    arc_to_au function
+    mag_contrast_plot function
+
+Author: Bryce Dixon
+Version: 16/10/2023
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline as cs
 from scipy.interpolate import interp1d as interp
+import astropy.io.fits as fits
 
 class contrast_convert:
     
@@ -263,3 +277,44 @@ def arc_to_au(arcseconds, distance):
     AU_array = distance * arcseconds
     
     return AU_array
+
+
+def mag_contrast_plot(fits_data, stellar_mag, distance, band, residual_type):
+    """Function to convert a .fits contrast curve from sensitivity (contrast) against separation in arcseconds to absolute magnitude against separation in AU and plot it
+
+    Parameters
+    ----------
+    fits_data : str
+        directory for the .fits file 
+    stellar_mag : float
+        absolute magnitude of the star
+    distance : float
+        distance to the target in parsecs
+    band : str
+        name of the bandwidth filter
+    residual_type : str
+        type of residuals present in the data
+
+    Returns
+    -------
+    mag_data : array of floats
+        array of the absolute magnitudes
+    sep_data : array of floats
+        array of the separations in parsecs
+    """
+    data = fits.getdata(fits_data, ext=0)
+    separation = data[0,:]
+    contrasts = data[1,:]
+    mag_data = contrast_to_mag(stellar_mag, contrasts)
+    sep_data = arc_to_au(separation, distance)
+    
+    fig = plt.figure(figsize=(10,6))
+    ax = fig.add_subplot(1,1,1)
+    
+    ax.plot(sep_data,mag_data)
+    ax.invert_yaxis()
+    ax.set_xlabel('Angular Separation (AU)')
+    ax.set_ylabel('Absolute Magnitude')
+    ax.set_title('{}-band, {} mag, {}, at {} parsec'.format(band, stellar_mag, residual_type, distance))
+    
+    return mag_data, sep_data
