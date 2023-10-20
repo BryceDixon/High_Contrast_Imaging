@@ -174,12 +174,15 @@ class contrast_convert:
             except:
                 pass
         
+        # convert solar masses to jupiter masses
+        mass_data = np.array(mass_data)*1047
+        
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(1,1,1)
         
         ax.plot(new_sep_data, mass_data)
         
-        ax.set_ylabel('Mass ($M_s$)')
+        ax.set_ylabel('Mass ($M_J$)')
         ax.set_xlabel('Separation (AU)')
         ax.set_title('Mass contrast curve for a {} Gyrs, {} Mag Star at a distance of {} pc'.format(self.age_track, stellar_mag, distance))
         
