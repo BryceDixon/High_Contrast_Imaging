@@ -1,0 +1,34 @@
+----- Evolutionary tracks README -----
+
+Evolutionary tracks of substellar objects from the "ATMO 2020" model set
+
+Each file contains the evolution of the effective temperature, luminosity, radius and 
+gravity of an object, along with absolute photometry in a number of photometric filters 
+derived from the atmosphere models. Photometry from the MKO, WISE and Spitzer IRAC filters
+are contained within the MKO_WISE_IRAC/ directories. JWST photometry and coronagraphy are 
+containied in the JWST_photometry/ and JWST_coronagraphy/ directories.Units are shown in 
+the headers of the files.
+
+The atmosphere models are calculated with either equilibrium chemistry or 
+non-equilibrium chemistry due to vertical mixing, which alters the predicted 
+photometry.  We therefore provide files with photometry derived from the three different 
+atmosphere model grids...
+  - Files within ATMO_CEQ/ include photometry derived from chemical equilibrium 
+    atmosphere models
+  - Files within ATMO_NEQ_weak/ include photometry derived from non-equilibirum 
+    chemistry atmosphere models with the `weak' mixing relationship
+  - Files within ATMO_NEQ_strong/ include photometry derived from non-equilibirum 
+    chemistry atmosphere models with the `strong' mixing relationship
+
+The files are named according to the mass of the object in solar masses and the chemistry
+used to derive the photometry. For example 0.02_ATMO_NEQ_strong_vega.txt contains the 
+evolution of a 0.02M/Msun object with photometry derived from non-equilibrium chemistry
+atmosphere models with the `strong' mixing relationship.
+
+More information about these models can be found in Phillips et al. (in press).
+
+Please contact me at mp537@exeter.ac.uk with any questions or requests. Additional 
+models or photometry in other filters can be generated to suit demand. 
+
+
+
