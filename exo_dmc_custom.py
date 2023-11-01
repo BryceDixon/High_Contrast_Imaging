@@ -189,7 +189,7 @@ class exodmc(object):
 
                 levels=[10,20,50,70,90,95,99,100]
                 norm = mcolors.Normalize(0, 100)
-                cf0=ax.contourf(self.sma, self.M2, map.T*100, norm=norm, levels=np.arange(0,100,0.1), extend='neither', cmap='Blues', antialiased=False, zorder=0)
+                cf0=ax.contourf(self.sma, self.M2, map.T*100, norm=norm, levels=np.arange(0,100,0.1), extend='neither', cmap='Reds', antialiased=False, zorder=0)
                 contours = plt.contour(self.sma, self.M2, map.T*100, levels, cmap='bone', zorder=1, linewidths=1)
                 #CB = plt.colorbar(cf0,  extend='both', cmap='Blues', ticks=levels)
                 #CB.add_lines(contours)
