@@ -40,10 +40,16 @@ class det_prob:
         ax.set_xlabel('Separation (AU)')
         if star_name is None:
             ax.set_title('{}-Band Mass contrast curve for a {} Myrs, {} Mag Star at a distance of {} pc'.format(band, age, stellar_mag, distance))
-            savefilename = '{}_{}mag_{}myrs_{}pc'.format(filter_name,stellar_mag,age,distance)
+            if filter_name.find('/') != -1:
+                savefilename = '{}_{}mag_{}myrs_{}pc'.format(band,stellar_mag,age,distance)
+            else:
+                savefilename = '{}_{}mag_{}myrs_{}pc'.format(filter_name,stellar_mag,age,distance)
         else:
             ax.set_title('{}-Band Mass contrast curve for {}, a {} Myrs, {} Mag Star at a distance of {} pc'.format(band, star_name, age, stellar_mag, distance))
-            savefilename = '{}_{}_band'.format(star_name,filter_name)
+            if filter_name.find('/') != -1:
+                savefilename = '{}_{}_band'.format(star_name,band)
+            else: 
+                savefilename = '{}_{}_band'.format(star_name,filter_name)
         plt.savefig(str(savefolder)+'/'+str(savefilename)+'_curve.png', bbox_inches='tight')
         mass_cont = os.path.join(savefolder, str(savefilename)+'_cont_data.txt')
         np.savetxt(mass_cont, cont)
