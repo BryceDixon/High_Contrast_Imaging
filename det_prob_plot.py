@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 from exo_dmc_custom import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
-import species
-species.SpeciesInit()
+from species import SpeciesInit
+from species.data.database import Database
+from species.read.read_isochrone import ReadIsochrone
+SpeciesInit()
 import astropy.io.fits as fits
 import os
 from scipy.interpolate import CubicSpline as cs
@@ -15,9 +17,9 @@ class det_prob:
     
     def __init__(self, model, model_tag):
         
-        self.database = species.Database()
+        self.database = Database()
         self.database.add_isochrones(model=model)
-        self.read_iso = species.ReadIsochrone(tag=model_tag)
+        self.read_iso = ReadIsochrone(tag=model_tag)
         
     def filter_list(self):
         print(self.read_iso.get_filters())
