@@ -24,9 +24,17 @@ class det_prob:
     def filter_list(self):
         print(self.read_iso.get_filters())
     
-    def mass_cont(self, foldername, file_list, file_mag_list, distance, age, stellar_mag, filter_name, band, savefolder, star_name):
+    def mass_cont(self, foldername, file_list, file_mag_list, distance, age, stellar_mag, filter_name, band, savefolder, star_name, interpolate, custom):
         
-        x, y = generate_contrast(file_list, foldername, file_mag_list, stellar_mag)
+        if custom == True:
+            x = file_list[:,0]
+            y = file_list[:,1]
+        elif interpolate == True:
+            x, y = generate_contrast(file_list, foldername, file_mag_list, stellar_mag)
+        else:
+            data = fits.getdata(str(foldername)+'/'+str(file_list), ext=0)
+            x = data[0,:]
+            y = data[1,:]
         x = ev.arc_to_au(x, distance)
         masses = self.read_iso.contrast_to_mass(age=age,
                                    distance=distance,
@@ -87,7 +95,7 @@ class det_prob:
         
 
 
-def plot(model, model_tag, foldername, file_list, file_mag_list, distance, age, stellar_mag_list, filter_name_list, band_list, savefolder = None, xmin = 0.1, xmax = 100, logx = True, star_list = None):
+def plot(model, model_tag, foldername, file_list, file_mag_list, distance, age, stellar_mag_list, filter_name_list, band_list, savefolder = None, xmin = 0.1, xmax = 100, logx = True, star_list = None, interpolate = True, custom = False):
     """Function to plot detection probability plots for a given population of stars 
 
     Parameters
@@ -129,10 +137,17 @@ def plot(model, model_tag, foldername, file_list, file_mag_list, distance, age, 
     
     for N in range(len(stellar_mag_list)):
         
-        if star_list is None:
-            _.mass_cont(foldername, file_list, file_mag_list, distance[N], age[N], stellar_mag_list[N], filter_name_list[N], band_list[N], savefolder, None)
+        if custom == True:
+            cont_file = file_list[N,:,:]
+        elif interpolate == False:
+            cont_file = file_list[N]
         else:
-            _.mass_cont(foldername, file_list, file_mag_list, distance[N], age[N], stellar_mag_list[N], filter_name_list[N], band_list[N], savefolder, star_list[N])
+            cont_file = file_list
+        
+        if star_list is None:
+            _.mass_cont(foldername, cont_file, file_mag_list, distance[N], age[N], stellar_mag_list[N], filter_name_list[N], band_list[N], savefolder, None, interpolate, custom)
+        else:
+            _.mass_cont(foldername, cont_file, file_mag_list, distance[N], age[N], stellar_mag_list[N], filter_name_list[N], band_list[N], savefolder, star_list[N], interpolate, custom)
         _.det_prob(xmin, xmax, logx)
 
 
