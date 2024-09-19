@@ -12,6 +12,7 @@ import astropy.io.fits as fits
 import os
 from scipy.interpolate import CubicSpline as cs
 from scipy.interpolate import interp1d as interp
+import pandas as pd
 
 class det_prob:
     
@@ -158,9 +159,17 @@ def generate_contrast(file_list, foldername, mag_list, desired_mag):
     sep_list = []
     cont_list = []
     for filename in file_list:
-        data = fits.getdata(str(foldername)+'/'+str(filename), ext=0)
-        sep = data[0,:]
-        cont = data[1,:]
+        if filename.endswith('.fits'):
+            data = fits.getdata(str(foldername)+'/'+str(filename), ext=0)
+            sep = data[0,:]
+            cont = data[1,:]
+        elif filename.endswith('.pkl'):
+            data = pd.read_pickle(str(foldername)+'/'+str(filename))
+            sep = np.array(data.distance_arcsec)
+            cont = np.array(data.sensitivity_gaussian)
+        else:
+            raise KeyError("Unsupported file format for contrasts, please choose from .fits or .pkl")
+        
         if len(sep_list) == 0:
             sep_list = np.concatenate((sep_list, sep))
             cont_list = np.concatenate((cont_list, cont))
